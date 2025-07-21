@@ -1,0 +1,92 @@
+[
+  {
+    "id": "paper_0",
+    "timing": {
+      "total_time": 3.384,
+      "working_time": 3.2
+    },
+    "score": 0.66,
+    "explanation": "errors_detected: \u274c | specific_error_found: \u2705 | matches_human_annotation: \u2705\nModel confidence: 0.3\nModel error_description: While the paper discusses complex mathematical concepts in Banach spaces and operator spaces, insufficient context is provided in this excerpt to definitively verify the specific error mentioned. The ..."
+  },
+  {
+    "id": "paper_1",
+    "timing": {
+      "total_time": 3.569,
+      "working_time": 3.404
+    },
+    "score": 0.0,
+    "explanation": "errors_detected: \u274c | specific_error_found: \u274c | matches_human_annotation: \u274c\nModel confidence: 0.85\nModel error_description: Potential error in beamforming gain calculation: The paper implies linear beamforming gain proportional to antenna count (N), when coherent beamforming actually results in power gain scaling as N^2. T..."
+  },
+  {
+    "id": "paper_2",
+    "timing": {
+      "total_time": 2.411,
+      "working_time": 2.254
+    },
+    "score": 1.0,
+    "explanation": "errors_detected: \u2705 | specific_error_found: \u2705 | matches_human_annotation: \u2705\nModel confidence: 0.3\nModel error_description: Insufficient information to verify the specific error in Section 4.2.3, as the provided text only includes the abstract and part of the introduction. Without the complete section 4.2.3 and context, a ..."
+  },
+  {
+    "id": "paper_3",
+    "timing": {
+      "total_time": 3.301,
+      "working_time": 3.171
+    },
+    "score": 0.0,
+    "explanation": "errors_detected: \u274c | specific_error_found: \u274c | matches_human_annotation: \u274c\nModel confidence: 0.85\nModel error_description: The paper's assumption about public topology of shortest path trees in Sections 3 and 4 is problematic. Specifically, the inappropriate application of Lemma 2.4 under this false assumption indicates a..."
+  },
+  {
+    "id": "paper_4",
+    "timing": {
+      "total_time": 3.492,
+      "working_time": 3.382
+    },
+    "score": 0.66,
+    "explanation": "errors_detected: \u274c | specific_error_found: \u2705 | matches_human_annotation: \u2705\nModel confidence: 0.7\nModel error_description: The paper contains multiple scientific inaccuracies and unsubstantiated claims:\n1. Dismisses greenhouse gas effects without providing rigorous scientific evidence\n2. Claims 'no reason to reduce emissi..."
+  },
+  {
+    "id": "paper_5",
+    "timing": {
+      "total_time": 1.53,
+      "working_time": 1.432
+    },
+    "score": 1.0,
+    "explanation": "errors_detected: \u2705 | specific_error_found: \u2705 | matches_human_annotation: \u2705\nModel confidence: 0.3\nModel error_description: "
+  },
+  {
+    "id": "paper_6",
+    "timing": {
+      "total_time": 3.45,
+      "working_time": 3.373
+    },
+    "score": 0.66,
+    "explanation": "errors_detected: \u274c | specific_error_found: \u2705 | matches_human_annotation: \u2705\nModel confidence: 0.4\nModel error_description: While the paper describes a sophisticated hybrid workflow for investigating understudied kinases, the precise details about recombinant protein fragment composition are not evident in the abstract. Wi..."
+  },
+  {
+    "id": "paper_7",
+    "timing": {
+      "total_time": 1.234,
+      "working_time": 1.178
+    },
+    "score": 1.0,
+    "explanation": "errors_detected: \u2705 | specific_error_found: \u2705 | matches_human_annotation: \u2705\nModel confidence: 0.1\nModel error_description: "
+  },
+  {
+    "id": "paper_8",
+    "timing": {
+      "total_time": 2.101,
+      "working_time": 2.063
+    },
+    "score": 1.0,
+    "explanation": "errors_detected: \u2705 | specific_error_found: \u2705 | matches_human_annotation: \u2705\nModel confidence: 0.3\nModel error_description: Cannot verify specific error mentioned in human annotation without direct access to Figure 4, which is not provided in the text snippet. Provided text is an abstract and does not include figures or UV..."
+  },
+  {
+    "id": "paper_9",
+    "timing": {
+      "total_time": 3.083,
+      "working_time": 3.057
+    },
+    "score": 0.66,
+    "explanation": "errors_detected: \u274c | specific_error_found: \u2705 | matches_human_annotation: \u2705\nModel confidence: 0.3\nModel error_description: While the human annotation indicates a specific error with the pIC50 equation, this content does not contain the actual equation (Eq. 1) that would allow direct verification. The paper abstract discus..."
+  }
+]
