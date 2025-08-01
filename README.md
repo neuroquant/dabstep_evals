@@ -12,6 +12,8 @@
 python3 -m venv spot_env
 source spot_env/bin/activate
 pip install -r requirements.txt
+pip install inspect_ai
+pip install git+https://github.com/UKGovernmentBEIS/inspect_evals
 ```
 
 ```
