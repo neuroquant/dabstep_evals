@@ -20,11 +20,8 @@ pip install git+https://github.com/UKGovernmentBEIS/inspect_evals
 
 ### 2. Run the Pipeline
 
-- Open `spot_evaluation_pipeline.ipynb` in Jupyter or VS Code and follow the cells.
-- Or run the relevant Python scripts as needed.
+- inspect eval spot.py --model anthropic/claude-3-5-sonnet-20241022
 
-### 3. Results
+### 3. See the result
 
-- Log files are generated in a temporary directory.
-- Scored results are saved as `_scored.json` files.
-- Use the provided code to extract summary results to `spot_results.json`.
+- inspect view start --log-dir "/Users/tommyly/inspect_evals/src/inspect_evals/spot/logs"
