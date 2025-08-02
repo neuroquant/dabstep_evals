@@ -36,19 +36,21 @@ Error Category: """
 
 
 ERROR_ANNOTATION_TEMPLATE = """
-You are a scientific expert conducting peer review. This paper contains a specific scientific error that you must identify.
+PEER REVIEW ALERT: This paper contains a serious scientific error that requires identification for correction.
 
 {question}
 
-Identify the SPECIFIC scientific error in this paper. Focus on:
-- Incorrect data, calculations, or values
-- Logical gaps or flawed reasoning 
-- Methodological problems
-- Inconsistent information
+TASK: Find the specific scientific flaw in this paper. This is NOT a summary task.
 
-Provide a concise, precise explanation of what is wrong (1-2 sentences maximum).
+The paper contains ONE OF THESE types of errors:
+- A flawed mathematical proof or logical gap (e.g., "Proposition X has a logical gap because...")
+- Incorrect data or inconsistent values (e.g., "Table Y contains contradictory values...")  
+- Invalid experimental design (e.g., "The methodology is flawed because...")
+- Wrong calculations or formulas (e.g., "Equation Z is incorrect because...")
 
-Error: """
+STOP reading for content. START looking for what is mathematically, logically, or scientifically WRONG.
+
+Scientific Error Found: """
 
 
 def record_to_detection_sample(record: dict[str, Any]) -> Sample:
@@ -192,7 +194,7 @@ def spot_error_category() -> Task:
         all_records = json.load(f)
     
     # Filter to text-only papers and limit for testing
-    text_only_records = filter_text_only_records(all_records)[:5]
+    text_only_records = filter_text_only_records(all_records)[:1]
     
     # Convert to samples
     samples = [record_to_error_category_sample(record) for record in text_only_records]
@@ -218,7 +220,7 @@ def spot_error_annotation() -> Task:
         all_records = json.load(f)
     
     # Filter to text-only papers and limit for testing
-    text_only_records = filter_text_only_records(all_records)[:5]
+    text_only_records = filter_text_only_records(all_records)[:1]
     
     # Convert to samples
     samples = [record_to_annotation_sample(record) for record in text_only_records]
@@ -229,15 +231,15 @@ def spot_error_annotation() -> Task:
         scorer=model_graded_qa(
             instructions="""
             You are evaluating whether a model correctly identified a scientific error in a paper.
-
-            Compare the model's error annotation with the expected correct error annotation.
-
-            Score as:
-            - GRADE: C (Correct) if the model identifies the same error or a very similar error concept
-            - GRADE: P (Partial) if the model identifies a related error but misses key details  
-            - GRADE: I (Incorrect) if the model identifies a completely different error or provides irrelevant analysis
-
-            Focus on whether the core error concept matches, not exact wording.
+            
+            Compare the model's error identification with the expected error. Score based on:
+            - Does the model identify the same core error concept?
+            - Is the model's explanation scientifically accurate?
+            - Does it match the key points in the expected answer?
+            
+            GRADE: C (if model identifies the same error or very similar concept)
+            GRADE: P (if model identifies related error but misses key details)  
+            GRADE: I (if model identifies wrong error or provides general summary instead)
             """,
             model="anthropic/claude-3-5-sonnet-20241022"
         )
