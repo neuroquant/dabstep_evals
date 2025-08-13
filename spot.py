@@ -39,12 +39,13 @@ Error Category: """
 ERROR_ANNOTATION_TEMPLATE = """
 Find the specific scientific error in this paper. Do not summarize.
 
+Example (format only):
+Error: Misapplied lemma: Lemma 2.1 requires X > 0, but the proof uses X < 0.
+
 {question}
 
-The paper contains a scientific error. Identify it specifically.
-
-Respond with exactly one line starting with "Error: " followed by the specific error. Do not include any other text.
-"""
+Respond with exactly one line starting with "Error: " followed by the specific error (less than 50 words). Do not include any other text.
+""".strip()
 
 
 def record_to_detection_sample(record: dict[str, Any]) -> Sample:
@@ -251,5 +252,3 @@ def spot_error_annotation() -> Task:
             model="openai/gpt-4o-mini"
         )
     )
-
-
