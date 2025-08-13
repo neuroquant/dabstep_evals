@@ -6,6 +6,7 @@ from inspect_ai import Task, task
 from inspect_ai.dataset import Sample, json_dataset
 from inspect_ai.scorer import choice, model_graded_fact, includes, match, model_graded_qa
 from inspect_ai.solver import generate, multiple_choice
+from inspect_ai.model import GenerateConfig
 
 
 ERROR_DETECTION_TEMPLATE = """
@@ -36,21 +37,14 @@ Error Category: """
 
 
 ERROR_ANNOTATION_TEMPLATE = """
-PEER REVIEW ALERT: This paper contains a serious scientific error that requires identification for correction.
+Find the specific scientific error in this paper. Do not summarize.
 
 {question}
 
-TASK: Find the specific scientific flaw in this paper. This is NOT a summary task.
+The paper contains a scientific error. Identify it specifically.
 
-The paper contains ONE OF THESE types of errors:
-- A flawed mathematical proof or logical gap (e.g., "Proposition X has a logical gap because...")
-- Incorrect data or inconsistent values (e.g., "Table Y contains contradictory values...")  
-- Invalid experimental design (e.g., "The methodology is flawed because...")
-- Wrong calculations or formulas (e.g., "Equation Z is incorrect because...")
-
-STOP reading for content. START looking for what is mathematically, logically, or scientifically WRONG.
-
-Scientific Error Found: """
+Respond with exactly one line starting with "Error: " followed by the specific error. Do not include any other text.
+"""
 
 
 def record_to_detection_sample(record: dict[str, Any]) -> Sample:
@@ -143,6 +137,9 @@ def record_to_annotation_sample(record: dict[str, Any]) -> Sample:
     
     # Use full content without truncation
     full_content = "\n\n".join(content_parts)
+    # Keep prompt within reasonable size to leave room for the model to answer
+    if len(full_content) > 8000:
+        full_content = full_content[:8000]
     title = record["title"]
     
     return Sample(
@@ -194,7 +191,7 @@ def spot_error_category() -> Task:
         all_records = json.load(f)
     
     # Filter to text-only papers and limit for testing
-    text_only_records = filter_text_only_records(all_records)[:1]
+    text_only_records = filter_text_only_records(all_records)[:5]
     
     # Convert to samples
     samples = [record_to_error_category_sample(record) for record in text_only_records]
@@ -220,7 +217,7 @@ def spot_error_annotation() -> Task:
         all_records = json.load(f)
     
     # Filter to text-only papers and limit for testing
-    text_only_records = filter_text_only_records(all_records)[:1]
+    text_only_records = filter_text_only_records(all_records)[:5]
     
     # Convert to samples
     samples = [record_to_annotation_sample(record) for record in text_only_records]
@@ -228,6 +225,11 @@ def spot_error_annotation() -> Task:
     return Task(
         dataset=samples,
         solver=generate(template=ERROR_ANNOTATION_TEMPLATE),
+        config=GenerateConfig(
+            temperature=0.0,
+            max_tokens=256,
+            system_message="You are an error detector. Find the specific scientific error in the paper. Do not summarize. The paper contains a scientific error - identify it specifically."
+        ),
         scorer=model_graded_qa(
             instructions="""
             You are evaluating whether a model correctly identified a scientific error in a paper.
@@ -237,11 +239,16 @@ def spot_error_annotation() -> Task:
             - Is the model's explanation scientifically accurate?
             - Does it match the key points in the expected answer?
             
-            GRADE: C (if model identifies the same error or very similar concept)
-            GRADE: P (if model identifies related error but misses key details)  
-            GRADE: I (if model identifies wrong error or provides general summary instead)
+            Use this rubric:
+            GRADE: C (if the model identifies the same error or very similar concept)
+            GRADE: P (if the model identifies a related error but misses key details)
+            GRADE: I (if the model identifies the wrong error or provides a general summary instead)
+            
+            Only reply with a single letter: C, P, or I.
             """,
-            model="anthropic/claude-3-5-sonnet-20241022"
+            grade_pattern=r"\b([CPI])\b",
+            partial_credit=True,
+            model="openai/gpt-4o-mini"
         )
     )
 
